@@ -49,7 +49,7 @@ class MyFS(Fuse):
 
     def __init__(self, *args, **kw):
         super(MyFS, self).__init__(*args, **kw)
-        self.buffer = bytearray()
+        # self.buffer = bytearray()
 
     def getattr(self, path):
         st = MyStat()
@@ -120,16 +120,6 @@ class MyFS(Fuse):
 
         self.buffer[:offset] = buf
         return len(buf)
-
-    def flush(self, path):
-        if path == "/participation":
-            data = self.buffer.decode().split(":")
-            requests.post(
-                "https://mis.cp.eng.chula.ac.th/krerk/teaching/2022s2-os/checkIn.php",
-                data={"studentid": data[0], "name": data[1], "email": data[2]},
-            )
-            self.buffer = bytearray()
-        return 0
 
     def release(self, path, flags):
         return 0
